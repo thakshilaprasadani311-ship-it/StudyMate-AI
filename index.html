@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>StudyMate AI - Smart Study Planner</title>
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Our CSS -->
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container">
+            <a class="navbar-brand fw-bold" href="#">
+                📚 StudyMate AI
+            </a>
+        </div>
+    </nav>
+
+
+    <!-- Welcome Section -->
+    <section class="welcome-section">
+        <div class="container text-center">
+
+            <h1 class="display-4 fw-bold">
+                Study Smarter with StudyMate AI
+            </h1>
+
+            <p class="lead mt-3">
+                Your AI-powered study planner for understanding,
+                connecting, and applying what you learn.
+            </p>
+
+            <div class="d-flex flex-column flex-sm-row justify-content-center gap-3 mt-4">
+                <button class="btn btn-primary btn-lg" onclick="scrollToPlanner()">Get Started 🚀</button>
+                <a href="exam-planner.html" class="btn btn-outline-primary btn-lg">📝 Exam Planner</a>
+            </div>
+
+        </div>
+    </section>
+
+
+    <!-- Study Planner Section -->
+    <section id="planner" class="py-5">
+        <div class="container">
+
+            <div class="row justify-content-center">
+
+                <div class="col-lg-8">
+
+                    <div class="card shadow">
+
+                        <div class="card-body p-4">
+
+                            <h2 class="text-center mb-4">
+                                Create Your Study Plan
+                            </h2>
+
+                            <p class="text-center text-muted">
+                                Tell StudyMate AI what you want to learn.
+                            </p>
+
+
+                            <!-- Subject -->
+                            <div class="mb-3">
+
+                                <label for="subject"
+                                       class="form-label fw-bold">
+                                    Subject
+                                </label>
+
+                                <input type="text"
+                                       class="form-control"
+                                       id="subject"
+                                       placeholder="Example: Mathematics">
+
+                            </div>
+
+
+                            <!-- Specific Topics -->
+                            <div class="mb-3">
+
+                                <label for="topic"
+                                       class="form-label fw-bold">
+                                    Specific Topic(s)
+                                    <span class="text-muted fw-normal">
+                                        (Optional)
+                                    </span>
+                                </label>
+
+                                <textarea
+                                    class="form-control"
+                                    id="topic"
+                                    rows="4"
+                                    placeholder="Example:
+Quadratic Equations
+Trigonometry
+Statistics"></textarea>
+
+                                <div class="form-text">
+                                    💡 Enter one topic per line.
+                                    You can add multiple difficult topics.
+                                    Leave this blank if you want a study plan
+                                    for the whole subject.
+                                </div>
+
+                            </div>
+
+
+                            <!-- Study Hours -->
+                            <div class="mb-3">
+
+                                <label for="hours"
+                                       class="form-label fw-bold">
+                                    Available Study Hours Per Week
+                                </label>
+
+                                <input type="number"
+                                       class="form-control"
+                                       id="hours"
+                                       min="1"
+                                       max="168"
+                                       placeholder="Example: 10">
+
+                            </div>
+
+
+                            <!-- Learning Goal -->
+                            <div class="mb-4">
+
+                                <label for="goal"
+                                       class="form-label fw-bold">
+                                    What do you want to achieve?
+                                </label>
+
+                                <select class="form-select"
+                                        id="goal">
+
+                                    <option value="">
+                                        Select your goal
+                                    </option>
+
+                                    <option value="understand">
+                                        Understand the concept
+                                    </option>
+
+                                    <option value="practice">
+                                        Practice and solve questions
+                                    </option>
+
+                                    <option value="exam">
+                                        Prepare for an exam
+                                    </option>
+
+                                    <option value="apply">
+                                        Apply the knowledge
+                                    </option>
+
+                                </select>
+
+                            </div>
+
+
+                            <!-- Generate Button -->
+                            <div class="text-center">
+
+                                <button class="btn btn-success btn-lg"
+                                        onclick="generatePlan()">
+                                    ✨ Generate My Study Plan
+                                </button>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+    </section>
+
+
+    <!-- Result Section -->
+    <section id="result" class="py-5 d-none">
+
+        <div class="container">
+
+            <div class="card shadow">
+
+                <div class="card-body p-4">
+
+                    <h2 class="text-center mb-4">
+                        🧠 Your StudyMate AI Plan
+                    </h2>
+
+                    <div id="planContent">
+                        <!-- Study plan will appear here -->
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- Footer -->
+    <footer class="bg-dark text-white text-center py-3">
+
+        <p class="mb-0">
+            StudyMate AI © 2026
+        </p>
+
+    </footer>
+
+
+    <!-- Our JavaScript -->
+    <script src="script.js"></script>
+
+</body>
+</html>

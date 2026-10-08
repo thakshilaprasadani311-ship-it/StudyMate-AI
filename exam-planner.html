@@ -1,0 +1,1818 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>StudyMate AI - Exam Planner</title>
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
+          rel="stylesheet">
+
+    <!-- Main CSS -->
+    <link rel="stylesheet"
+          href="style.css">
+
+
+    <style>
+        /* ==========================================
+           Exam Planner UI Polish
+           ========================================== */
+
+        body {
+            background: #f4f7fb;
+        }
+
+        .navbar {
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+        }
+
+        .welcome-section {
+            position: relative;
+            overflow: hidden;
+            background: linear-gradient(135deg, #0d6efd 0%, #5b8def 100%);
+            color: white;
+            padding: 70px 0 !important;
+        }
+
+        .welcome-section::before,
+        .welcome-section::after {
+            content: "";
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.10);
+        }
+
+        .welcome-section::before {
+            width: 220px;
+            height: 220px;
+            top: -90px;
+            left: -70px;
+        }
+
+        .welcome-section::after {
+            width: 300px;
+            height: 300px;
+            right: -120px;
+            bottom: -150px;
+        }
+
+        .welcome-section .container {
+            position: relative;
+            z-index: 1;
+        }
+
+        .welcome-section h1 {
+            letter-spacing: -0.5px;
+        }
+
+        #examPlanner {
+            padding-top: 45px !important;
+            padding-bottom: 55px !important;
+        }
+
+        #examPlanner > .container > .row > .col-lg-8 {
+            max-width: 900px;
+        }
+
+        #examPlanner .card,
+        #examResult .card {
+            border: 0;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 12px 35px rgba(31, 45, 61, 0.10) !important;
+        }
+
+        #examPlanner .card-body,
+        #examResult .card-body {
+            padding: 34px !important;
+        }
+
+        #examPlanner h2,
+        #examResult h2 {
+            color: #1f2937;
+        }
+
+        .subject-card {
+            position: relative;
+            border: 1px solid #dce5f0 !important;
+            border-radius: 16px !important;
+            background: #fbfdff;
+            padding: 22px !important;
+            margin-bottom: 18px !important;
+            transition: transform 0.2s ease, box-shadow 0.2s ease,
+                        border-color 0.2s ease;
+        }
+
+        .subject-card:hover {
+            transform: translateY(-2px);
+            border-color: #9fc1f8 !important;
+            box-shadow: 0 8px 22px rgba(13, 110, 253, 0.08);
+        }
+
+        .subject-card h5 {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #0d6efd !important;
+            margin-bottom: 20px !important;
+        }
+
+        .subject-card h5::before {
+            content: "📚";
+            width: 34px;
+            height: 34px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 10px;
+            background: #e8f1ff;
+            font-size: 17px;
+        }
+
+        .form-label {
+            font-weight: 600;
+            color: #374151;
+        }
+
+        .form-control {
+            border-radius: 10px;
+            border-color: #d7e0eb;
+            padding: 11px 13px;
+        }
+
+        .form-control:focus {
+            border-color: #6ea8fe;
+            box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.12);
+        }
+
+        textarea.form-control {
+            resize: vertical;
+            min-height: 92px;
+        }
+
+        .form-text {
+            margin-top: 7px;
+            color: #6b7280 !important;
+        }
+
+        #examPlanner .btn-outline-primary {
+            border-radius: 10px;
+            padding: 10px 18px;
+            font-weight: 600;
+            border-width: 2px;
+        }
+
+        #examPlanner .btn-success {
+            border: 0;
+            border-radius: 12px;
+            padding: 13px 26px;
+            font-weight: 700;
+            box-shadow: 0 7px 18px rgba(25, 135, 84, 0.20);
+        }
+
+        #examPlanner .btn-success:hover {
+            transform: translateY(-1px);
+        }
+
+        #examResult {
+            background: #eef4fb;
+        }
+
+        #examResult .alert-primary {
+            border: 0;
+            border-left: 5px solid #0d6efd;
+            border-radius: 14px;
+            background: #eef5ff;
+            padding: 22px;
+        }
+
+        #examResult .alert-primary h4 {
+            font-weight: 700;
+            color: #0b5ed7;
+            margin-bottom: 16px;
+        }
+
+        #examPlanContent {
+            color: #374151;
+            line-height: 1.7;
+        }
+
+        #examPlanContent h4,
+        #examPlanContent h5 {
+            padding-top: 8px;
+        }
+
+        #examPlanContent hr {
+            border-color: #dce5f0;
+        }
+
+        #examPlanContent table {
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        #examPlanContent blockquote {
+            border-left: 4px solid #0d6efd;
+            padding: 10px 16px;
+            margin: 15px 0;
+            background: #f5f9ff;
+            border-radius: 0 8px 8px 0;
+        }
+
+        footer {
+            margin-top: 0;
+        }
+
+        @media (max-width: 768px) {
+            .welcome-section {
+                padding: 52px 0 !important;
+            }
+
+            .welcome-section h1 {
+                font-size: 2.2rem;
+            }
+
+            #examPlanner .card-body,
+            #examResult .card-body {
+                padding: 22px !important;
+            }
+
+            .subject-card {
+                padding: 17px !important;
+            }
+
+            #examPlanner .btn-success {
+                width: 100%;
+            }
+
+            #examPlanner .btn-outline-primary {
+                width: 100%;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .navbar .container {
+                gap: 10px;
+            }
+
+            .navbar-brand {
+                font-size: 0.95rem;
+            }
+
+            .navbar .btn {
+                font-size: 0.85rem;
+                padding: 7px 10px;
+            }
+
+            .welcome-section h1 {
+                font-size: 1.9rem;
+            }
+
+            .welcome-section .lead {
+                font-size: 1rem;
+            }
+        }
+    </style>
+
+</head>
+
+
+<body>
+
+
+    <!-- ==========================================
+         Navigation Bar
+         ========================================== -->
+
+    <nav class="navbar navbar-dark bg-primary">
+
+        <div class="container">
+
+            <a class="navbar-brand fw-bold"
+               href="index.html">
+
+                📚 StudyMate AI
+
+            </a>
+
+
+            <a class="btn btn-light"
+               href="index.html">
+
+                Study Planner
+
+            </a>
+
+        </div>
+
+    </nav>
+
+
+
+    <!-- ==========================================
+         Welcome Section
+         ========================================== -->
+
+    <section class="welcome-section">
+
+        <div class="container text-center">
+
+            <h1 class="display-4 fw-bold">
+
+                📝 Exam Planner
+
+            </h1>
+
+
+            <p class="lead mt-3">
+
+                Prepare for your exams with an
+                AI-powered study plan.
+
+            </p>
+
+        </div>
+
+    </section>
+
+
+
+    <!-- ==========================================
+         Exam Planner Section
+         ========================================== -->
+
+    <section id="examPlanner"
+             class="py-5">
+
+        <div class="container">
+
+            <div class="row justify-content-center">
+
+                <div class="col-lg-8">
+
+                    <div class="card shadow">
+
+                        <div class="card-body p-4">
+
+
+                            <h2 class="text-center mb-4">
+
+                                Create Your Exam Study Plan
+
+                            </h2>
+
+
+                            <p class="text-center text-muted">
+
+                                Add each subject, its exam date,
+                                and optional topics.
+
+                            </p>
+
+
+
+                            <!-- ==================================
+                                 Subjects
+                                 ================================== -->
+
+                            <div class="mb-4">
+
+                                <label class="form-label fw-bold">
+
+                                    📚 Subjects
+
+                                </label>
+
+
+                                <div id="subjectsContainer">
+
+
+                                    <!-- ==========================
+                                         Subject 1
+                                         ========================== -->
+
+                                    <div class="subject-card border rounded p-3 mb-3">
+
+
+                                        <h5 class="fw-bold text-primary mb-3">
+
+                                            Subject 1
+
+                                        </h5>
+
+
+
+                                        <!-- Subject Name -->
+
+                                        <div class="mb-3">
+
+                                            <label class="form-label">
+
+                                                Subject
+
+                                            </label>
+
+
+                                            <input type="text"
+                                                   class="form-control subject-name"
+                                                   placeholder="Example: Mathematics">
+
+                                        </div>
+
+
+
+                                        <!-- Exam Date -->
+
+                                        <div class="mb-3">
+
+                                            <label class="form-label">
+
+                                                📅 Exam Date
+
+                                            </label>
+
+
+                                            <input type="date"
+                                                   class="form-control subject-date">
+
+                                        </div>
+
+
+
+                                        <!-- Specific Topics -->
+
+                                        <div>
+
+                                            <label class="form-label">
+
+                                                Specific Topics
+
+                                                <span class="text-muted">
+
+                                                    (Optional)
+
+                                                </span>
+
+                                            </label>
+
+
+                                            <textarea
+                                                class="form-control subject-topics"
+                                                rows="3"
+                                                placeholder="Example:
+Quadratic Equations
+Trigonometry
+Statistics"></textarea>
+
+
+                                            <div class="form-text">
+
+                                                💡 Leave blank if you
+                                                don't know the specific topics.
+
+                                            </div>
+
+                                        </div>
+
+
+                                    </div>
+
+
+                                </div>
+
+
+
+                                <!-- Add Subject Button -->
+
+                                <button type="button"
+                                        class="btn btn-outline-primary"
+                                        onclick="addSubject()">
+
+                                    + Add Another Subject
+
+                                </button>
+
+
+                            </div>
+
+
+
+                            <!-- ==================================
+                                 Generate Button
+                                 ================================== -->
+
+                            <div class="text-center">
+
+                                <button type="button"
+                                        class="btn btn-success btn-lg"
+                                        onclick="generateExamPlan()">
+
+                                    ✨ Generate Exam Study Plan
+
+                                </button>
+
+                            </div>
+
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+
+    <!-- ==========================================
+         Result Section
+         ========================================== -->
+
+    <section id="examResult"
+             class="py-5 d-none">
+
+        <div class="container">
+
+            <div class="card shadow">
+
+                <div class="card-body p-4">
+
+
+                    <h2 class="text-center mb-4">
+
+                        🧠 Your Exam Study Plan
+
+                    </h2>
+
+
+                    <div id="examPlanContent">
+
+                        <!-- AI plan will appear here -->
+
+                    </div>
+
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+
+    <!-- ==========================================
+         Footer
+         ========================================== -->
+
+    <footer class="bg-dark text-white text-center py-3">
+
+        <p class="mb-0">
+
+            StudyMate AI © 2026
+
+        </p>
+
+    </footer>
+
+
+
+    <!-- ==========================================
+         Exam Planner JavaScript
+         ========================================== -->
+
+    <script>
+
+
+        // ==========================================
+        // Add Another Subject
+        // ==========================================
+
+        function addSubject() {
+
+
+            const container =
+                document.getElementById(
+                    "subjectsContainer"
+                );
+
+
+            const subjectCount =
+                container.querySelectorAll(
+                    ".subject-card"
+                ).length + 1;
+
+
+            const subjectCard =
+                document.createElement("div");
+
+
+            subjectCard.className =
+                "subject-card border rounded p-3 mb-3";
+
+
+            subjectCard.innerHTML = `
+
+                <h5 class="fw-bold text-primary mb-3">
+
+                    Subject ${subjectCount}
+
+                </h5>
+
+
+                <!-- Subject Name -->
+
+                <div class="mb-3">
+
+                    <label class="form-label">
+
+                        Subject
+
+                    </label>
+
+
+                    <input type="text"
+                           class="form-control subject-name"
+                           placeholder="Example: ICT">
+
+                </div>
+
+
+
+                <!-- Exam Date -->
+
+                <div class="mb-3">
+
+                    <label class="form-label">
+
+                        📅 Exam Date
+
+                    </label>
+
+
+                    <input type="date"
+                           class="form-control subject-date">
+
+                </div>
+
+
+
+                <!-- Specific Topics -->
+
+                <div>
+
+                    <label class="form-label">
+
+                        Specific Topics
+
+                        <span class="text-muted">
+
+                            (Optional)
+
+                        </span>
+
+                    </label>
+
+
+                    <textarea
+                        class="form-control subject-topics"
+                        rows="3"
+                        placeholder="Example:
+Networking
+Databases
+Programming"></textarea>
+
+
+                    <div class="form-text">
+
+                        💡 Leave blank if you
+                        don't know the specific topics.
+
+                    </div>
+
+                </div>
+
+            `;
+
+
+            container.appendChild(
+                subjectCard
+            );
+
+        }
+
+
+
+        // ==========================================
+        // Generate Exam Plan
+        // ==========================================
+
+        async function generateExamPlan() {
+
+
+            // ==========================================
+            // Get Form Elements
+            // ==========================================
+
+            const subjectNames =
+                document.querySelectorAll(
+                    ".subject-name"
+                );
+
+
+            const subjectDates =
+                document.querySelectorAll(
+                    ".subject-date"
+                );
+
+
+            const subjectTopics =
+                document.querySelectorAll(
+                    ".subject-topics"
+                );
+
+
+
+            // ==========================================
+            // Collect Subjects
+            // ==========================================
+
+            let subjects = [];
+
+
+            for (
+                let i = 0;
+                i < subjectNames.length;
+                i++
+            ) {
+
+
+                const name =
+                    subjectNames[i]
+                        .value
+                        .trim();
+
+
+                const examDate =
+                    subjectDates[i]
+                        .value;
+
+
+                const topicText =
+                    subjectTopics[i]
+                        .value
+                        .trim();
+
+
+
+                // Ignore completely empty cards
+
+                if (
+                    name === "" &&
+                    examDate === "" &&
+                    topicText === ""
+                ) {
+
+                    continue;
+
+                }
+
+
+
+                // ======================================
+                // Check Subject Name
+                // ======================================
+
+                if (name === "") {
+
+                    alert(
+                        `Please enter the subject name for Subject ${i + 1}.`
+                    );
+
+                    return;
+
+                }
+
+
+
+                // ======================================
+                // Check Exam Date
+                // ======================================
+
+                if (examDate === "") {
+
+                    alert(
+                        `Please select the exam date for ${name}.`
+                    );
+
+                    return;
+
+                }
+
+
+
+                // ======================================
+                // Convert Topics to Array
+                // ======================================
+
+                let topics = [];
+
+
+                if (topicText !== "") {
+
+                    topics =
+                        topicText
+                            .split(/\n|,/)
+                            .map(function(topic) {
+
+                                return topic.trim();
+
+                            })
+                            .filter(function(topic) {
+
+                                return topic !== "";
+
+                            });
+
+                }
+
+
+
+                // ======================================
+                // Add Subject
+                // ======================================
+
+                subjects.push({
+
+                    name: name,
+
+                    examDate: examDate,
+
+                    topics: topics
+
+                });
+
+            }
+
+
+
+            // ==========================================
+            // Check Subject Count
+            // ==========================================
+
+            if (subjects.length === 0) {
+
+                alert(
+                    "Please add at least one subject."
+                );
+
+                return;
+
+            }
+
+
+
+            // ==========================================
+            // Today's Date
+            // ==========================================
+
+            const today =
+                new Date();
+
+
+            today.setHours(
+                0,
+                0,
+                0,
+                0
+            );
+
+
+
+            // ==========================================
+            // Calculate Days Remaining
+            // ==========================================
+
+            for (
+                let i = 0;
+                i < subjects.length;
+                i++
+            ) {
+
+
+                const exam =
+                    new Date(
+                        subjects[i].examDate
+                    );
+
+
+                exam.setHours(
+                    0,
+                    0,
+                    0,
+                    0
+                );
+
+
+
+                // Past date
+
+                if (exam < today) {
+
+                    alert(
+                        `${subjects[i].name} has a past exam date. Please select a future date.`
+                    );
+
+                    return;
+
+                }
+
+
+
+                const difference =
+                    exam - today;
+
+
+                subjects[i].daysRemaining =
+                    Math.ceil(
+                        difference /
+                        (1000 * 60 * 60 * 24)
+                    );
+
+            }
+
+
+
+            // ==========================================
+            // Find Nearest Exam
+            // ==========================================
+
+            let nearestSubject =
+                subjects[0];
+
+
+            subjects.forEach(function(subject) {
+
+                if (
+                    subject.daysRemaining <
+                    nearestSubject.daysRemaining
+                ) {
+
+                    nearestSubject =
+                        subject;
+
+                }
+
+            });
+
+
+
+            // ==========================================
+            // Show Result Section
+            // ==========================================
+
+            const result =
+                document.getElementById(
+                    "examResult"
+                );
+
+
+            const content =
+                document.getElementById(
+                    "examPlanContent"
+                );
+
+
+            result.classList.remove(
+                "d-none"
+            );
+
+
+
+            // ==========================================
+            // Show Loading
+            // ==========================================
+
+            content.innerHTML = `
+
+                <div class="text-center py-5">
+
+                    <div
+                        class="spinner-border text-primary"
+                        role="status">
+
+                    </div>
+
+
+                    <p class="mt-3">
+
+                        🤖 StudyMate AI is creating
+                        your personalized exam study plan...
+
+                    </p>
+
+
+                    <p class="text-muted">
+
+                        Please wait a moment.
+
+                    </p>
+
+                </div>
+
+            `;
+
+
+
+            // Scroll to result
+
+            result.scrollIntoView({
+
+                behavior: "smooth"
+
+            });
+
+
+
+            // ==========================================
+            // Send Data to Backend
+            // ==========================================
+
+            try {
+
+
+                const response =
+                    await fetch(
+                        "/api/generate-exam-plan",
+                        {
+
+                            method: "POST",
+
+
+                            headers: {
+
+                                "Content-Type":
+                                    "application/json"
+
+                            },
+
+
+                            body: JSON.stringify({
+
+                                subjects:
+                                    subjects,
+
+                                examDate:
+                                    nearestSubject.examDate,
+
+                                daysRemaining:
+                                    nearestSubject.daysRemaining
+
+                            })
+
+                        }
+                    );
+
+
+
+                // ======================================
+                // Read Server Response
+                // ======================================
+
+                const data =
+                    await response.json();
+
+
+
+                // ======================================
+                // Check Response
+                // ======================================
+
+                if (!response.ok) {
+
+                    throw new Error(
+
+                        data.error ||
+                        "Failed to generate exam study plan."
+
+                    );
+
+                }
+
+
+
+                // ======================================
+                // Display AI Result
+                // ======================================
+
+                content.innerHTML = `
+
+                    <div class="alert alert-primary">
+
+                        <h4>
+
+                            📅 Exam Preparation Overview
+
+                        </h4>
+
+
+                        <p>
+
+                            <strong>
+                                Number of Subjects:
+                            </strong>
+
+                            ${subjects.length}
+
+                        </p>
+
+
+                        <p>
+
+                            <strong>
+                                Nearest Exam:
+                            </strong>
+
+                            ${nearestSubject.name}
+
+                        </p>
+
+
+                        <p class="mb-0">
+
+                            <strong>
+                                Days Remaining:
+                            </strong>
+
+                            ${nearestSubject.daysRemaining}
+                            days
+
+                        </p>
+
+                    </div>
+
+
+                    <div class="mt-4">
+
+                        ${formatExamAIResponse(
+                            data.plan
+                        )}
+
+                    </div>
+
+                `;
+
+
+            } catch (error) {
+
+
+                console.error(
+                    "Exam Planner Error:",
+                    error
+                );
+
+
+                // ======================================
+                // Show Error
+                // ======================================
+
+                content.innerHTML = `
+
+                    <div class="alert alert-danger">
+
+                        <h4>
+
+                            ❌ Something went wrong
+
+                        </h4>
+
+
+                        <p>
+
+                            ${formatExamInline(
+                                error.message
+                            )}
+
+                        </p>
+
+
+                        <p class="mb-0">
+
+                            Please make sure the
+                            StudyMate AI server is running.
+
+                        </p>
+
+                    </div>
+
+                `;
+
+            }
+
+        }
+
+
+
+        // ==========================================
+        // Format AI Response
+        // ==========================================
+
+        function formatExamAIResponse(text) {
+
+
+            let lines =
+                text.split("\n");
+
+
+            let html = "";
+
+
+            let inList = false;
+
+
+            let inTable = false;
+
+
+
+            for (
+                let i = 0;
+                i < lines.length;
+                i++
+            ) {
+
+
+                let line =
+                    lines[i].trim();
+
+
+
+                // ======================================
+                // Empty Line
+                // ======================================
+
+                if (line === "") {
+
+
+                    if (inList) {
+
+                        html += "</ul>";
+
+                        inList = false;
+
+                    }
+
+
+                    if (inTable) {
+
+                        html +=
+                            "</tbody></table></div>";
+
+                        inTable = false;
+
+                    }
+
+
+                    continue;
+
+                }
+
+
+
+                // ======================================
+                // Horizontal Line
+                // ======================================
+
+                if (line === "---") {
+
+
+                    if (inList) {
+
+                        html += "</ul>";
+
+                        inList = false;
+
+                    }
+
+
+                    if (inTable) {
+
+                        html +=
+                            "</tbody></table></div>";
+
+                        inTable = false;
+
+                    }
+
+
+                    html += `
+
+                        <hr class="my-4">
+
+                    `;
+
+
+                    continue;
+
+                }
+
+
+
+                // ======================================
+                // H3 Heading
+                // ======================================
+
+                if (
+                    line.startsWith("### ")
+                ) {
+
+
+                    if (inList) {
+
+                        html += "</ul>";
+
+                        inList = false;
+
+                    }
+
+
+                    if (inTable) {
+
+                        html +=
+                            "</tbody></table></div>";
+
+                        inTable = false;
+
+                    }
+
+
+                    const heading =
+                        line.replace(
+                            /^### /,
+                            ""
+                        );
+
+
+                    html += `
+
+                        <h4 class="mt-4 mb-3 fw-bold text-primary">
+
+                            ${formatExamInline(
+                                heading
+                            )}
+
+                        </h4>
+
+                    `;
+
+
+                    continue;
+
+                }
+
+
+
+                // ======================================
+                // H4 Heading
+                // ======================================
+
+                if (
+                    line.startsWith("#### ")
+                ) {
+
+
+                    if (inList) {
+
+                        html += "</ul>";
+
+                        inList = false;
+
+                    }
+
+
+                    if (inTable) {
+
+                        html +=
+                            "</tbody></table></div>";
+
+                        inTable = false;
+
+                    }
+
+
+                    const heading =
+                        line.replace(
+                            /^#### /,
+                            ""
+                        );
+
+
+                    html += `
+
+                        <h5 class="mt-4 mb-3 fw-bold text-primary">
+
+                            ${formatExamInline(
+                                heading
+                            )}
+
+                        </h5>
+
+                    `;
+
+
+                    continue;
+
+                }
+
+
+
+                // ======================================
+                // Bullet List
+                // ======================================
+
+                if (
+                    line.startsWith("* ") ||
+                    line.startsWith("- ")
+                ) {
+
+
+                    if (inTable) {
+
+                        html +=
+                            "</tbody></table></div>";
+
+                        inTable = false;
+
+                    }
+
+
+                    if (!inList) {
+
+                        html += `
+
+                            <ul class="mb-3">
+
+                        `;
+
+                        inList = true;
+
+                    }
+
+
+                    const bullet =
+                        line.replace(
+                            /^[-*] /,
+                            ""
+                        );
+
+
+                    html += `
+
+                        <li class="mb-2">
+
+                            ${formatExamInline(
+                                bullet
+                            )}
+
+                        </li>
+
+                    `;
+
+
+                    continue;
+
+                }
+
+
+
+                // ======================================
+                // Numbered List
+                // ======================================
+
+                if (
+                    /^\d+\.\s/.test(line)
+                ) {
+
+
+                    if (inTable) {
+
+                        html +=
+                            "</tbody></table></div>";
+
+                        inTable = false;
+
+                    }
+
+
+                    if (inList) {
+
+                        html += "</ul>";
+
+                        inList = false;
+
+                    }
+
+
+                    const numberText =
+                        line.replace(
+                            /^\d+\.\s/,
+                            ""
+                        );
+
+
+                    html += `
+
+                        <p class="mb-2">
+
+                            <strong>
+
+                                ${formatExamInline(
+                                    numberText
+                                )}
+
+                            </strong>
+
+                        </p>
+
+                    `;
+
+
+                    continue;
+
+                }
+
+
+
+                // ======================================
+                // Markdown Table
+                // ======================================
+
+                if (
+                    line.startsWith("|") &&
+                    line.endsWith("|")
+                ) {
+
+
+                    let cells =
+                        line
+                            .split("|")
+                            .slice(1, -1)
+                            .map(function(cell) {
+
+                                return cell.trim();
+
+                            });
+
+
+
+                    // Skip table separator
+
+                    if (
+                        cells.length > 0 &&
+                        cells.every(function(cell) {
+
+                            return /^:?-+:?$/.test(
+                                cell
+                            );
+
+                        })
+                    ) {
+
+                        continue;
+
+                    }
+
+
+
+                    if (!inTable) {
+
+
+                        if (inList) {
+
+                            html += "</ul>";
+
+                            inList = false;
+
+                        }
+
+
+                        html += `
+
+                            <div class="table-responsive mt-3 mb-4">
+
+                                <table class="table table-bordered table-striped table-hover">
+
+                                    <thead class="table-primary">
+
+                                        <tr>
+
+                        `;
+
+
+                        cells.forEach(function(cell) {
+
+                            html += `
+
+                                <th>
+
+                                    ${formatExamInline(
+                                        cell
+                                    )}
+
+                                </th>
+
+                            `;
+
+                        });
+
+
+                        html += `
+
+                                        </tr>
+
+                                    </thead>
+
+                                    <tbody>
+
+                        `;
+
+
+                        inTable = true;
+
+
+                    } else {
+
+
+                        html += "<tr>";
+
+
+                        cells.forEach(function(cell) {
+
+                            html += `
+
+                                <td>
+
+                                    ${formatExamInline(
+                                        cell
+                                    )}
+
+                                </td>
+
+                            `;
+
+                        });
+
+
+                        html += "</tr>";
+
+                    }
+
+
+                    continue;
+
+                }
+
+
+
+                // ======================================
+                // Normal Paragraph
+                // ======================================
+
+                if (inList) {
+
+                    html += "</ul>";
+
+                    inList = false;
+
+                }
+
+
+                if (inTable) {
+
+                    html +=
+                        "</tbody></table></div>";
+
+                    inTable = false;
+
+                }
+
+
+                html += `
+
+                    <p class="mb-3">
+
+                        ${formatExamInline(
+                            line
+                        )}
+
+                    </p>
+
+                `;
+
+            }
+
+
+
+            // ==========================================
+            // Close Open List / Table
+            // ==========================================
+
+            if (inList) {
+
+                html += "</ul>";
+
+            }
+
+
+            if (inTable) {
+
+                html +=
+                    "</tbody></table></div>";
+
+            }
+
+
+            return html;
+
+        }
+
+
+
+        // ==========================================
+        // Format Inline Markdown
+        // ==========================================
+
+        function formatExamInline(text) {
+
+
+            text =
+                text
+                    .replace(
+                        /\$\$(.*?)\$\$/g,
+                        "$1"
+                    )
+                    .replace(
+                        /\$([^$]+)\$/g,
+                        "$1"
+                    )
+                    .replace(
+                        /\\pm/g,
+                        "±"
+                    )
+                    .replace(
+                        /\\sqrt\{([^}]+)\}/g,
+                        "√($1)"
+                    )
+                    .replace(
+                        /\\frac\{([^}]+)\}\{([^}]+)\}/g,
+                        "($1) / ($2)"
+                    )
+                    .replace(
+                        /\^2/g,
+                        "²"
+                    )
+                    .replace(
+                        /\^3/g,
+                        "³"
+                    )
+                    .replace(
+                        /\^([0-9]+)/g,
+                        "<sup>$1</sup>"
+                    );
+
+
+            text =
+                text.replace(
+                    /\*\*(.*?)\*\*/g,
+                    "<strong>$1</strong>"
+                );
+
+
+            text =
+                text.replace(
+                    /\*(.*?)\*/g,
+                    "<em>$1</em>"
+                );
+
+
+            return text;
+
+        }
+
+
+    </script>
+
+
+</body>
+
+</html>
