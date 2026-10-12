@@ -2,7 +2,7 @@ const express = require("express");
 const path = require("path");
 
 const app = express();
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 
 // Get Gemini API key from Windows Environment Variable
 const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
@@ -971,13 +971,7 @@ Remember:
 // Start Server
 // ==========================================
 
-app.listen(
-    PORT,
-    () => {
 
-        console.log(
-            `StudyMate AI is running at http://localhost:${PORT}`
-        );
-
-    }
-);
+app.listen(PORT, "0.0.0.0", () => {
+    console.log(`StudyMate AI is running on port ${PORT}`);
+});
